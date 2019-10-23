@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   mode: 'none',
   //entry: { 'index.js': './src/index.ts', 'index.css': './src/index.scss' },
   entry: ['./src/index.ts', './src/index.scss'],
