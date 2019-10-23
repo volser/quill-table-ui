@@ -1,6 +1,5 @@
-module.exports = {
+export default {
   mode: 'none',
-  //entry: { 'index.js': './src/index.ts', 'index.css': './src/index.scss' },
   entry: ['./src/index.ts', './src/index.scss'],
   output: {
     path: __dirname + '/dist/umd',
