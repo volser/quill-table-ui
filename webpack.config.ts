@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 export default {
   mode: 'none',
   entry: ['./src/index.ts', './src/index.scss'],
@@ -5,8 +7,7 @@ export default {
     path: __dirname + '/dist/umd',
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: 'quillTableUI',
-    libraryExport: 'default'
+    library: 'quillTableUI'
   },
   module: {
     rules: [
@@ -33,27 +34,16 @@ export default {
       },
       {
         test: /\.scss$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].css'
-            }
-          },
-          {
-            loader: 'extract-loader'
-          },
-          {
-            loader: 'css-loader?-url'
-          },
-          {
-            loader: 'sass-loader'
-          }
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       }
     ]
   },
   resolve: {
     extensions: ['.ts', '.js', '.scss']
-  }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'index.css'
+    })
+  ]
 };
