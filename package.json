@@ -1,6 +1,6 @@
 {
   "name": "quill-table-ui",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "UI for Quill tables",
   "main": "dist/umd/index.js",
   "module": "dist/index.js",
@@ -13,7 +13,8 @@
     "build:esm": "tsc --module es2015",
     "build:dist": "npm run build:esm && npm run build:umd",
     "build:clean": "rm -rf dist",
-    "postversion": "npm run build:dist && git push && npm publish && npm run build:clean",
+    "build:styles": "node-sass src/index.scss --output dist/ --output-style compressed",
+    "postversion": "npm run build:dist && npm run build:styles && git push && npm publish && npm run build:clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,11 +35,8 @@
   "devDependencies": {
     "@types/node": "^12.7.2",
     "@types/webpack": "^4.32.2",
-    "css-loader": "^3.2.0",
-    "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
     "quill": "^2.0.0-dev.3",
-    "sass-loader": "^8.0.0",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",

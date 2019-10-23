@@ -1,8 +1,5 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-export default {
-  mode: 'none',
-  entry: ['./src/index.ts', './src/index.scss'],
+module.exports = {
+  entry: './src/index.ts',
   output: {
     path: __dirname + '/dist/umd',
     filename: 'index.js',
@@ -31,19 +28,10 @@ export default {
             declaration: false
           }
         }
-      },
-      {
-        test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       }
     ]
   },
   resolve: {
     extensions: ['.ts', '.js', '.scss']
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'index.css'
-    })
-  ]
+  }
 };

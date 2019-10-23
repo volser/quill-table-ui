@@ -227,7 +227,6 @@ export default class TableUI {
     const show = this.isTable(range);
     if (show) {
       const [cell, offset] = this.quill.getLine(range.index);
-      console.log('cell', cell);
       const containerBounds = this.quill.container.getBoundingClientRect();
       let bounds = cell.domNode.getBoundingClientRect();
       bounds = {
