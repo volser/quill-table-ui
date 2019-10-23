@@ -5,7 +5,8 @@ export default {
     path: __dirname + '/dist/umd',
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: 'quillTableUI'
+    library: 'quillTableUI',
+    libraryExport: 'default'
   },
   module: {
     rules: [

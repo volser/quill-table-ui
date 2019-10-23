@@ -1,6 +1,6 @@
 {
   "name": "quill-table-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "UI for Quill tables",
   "main": "dist/umd/index.js",
   "module": "dist/index.js",
