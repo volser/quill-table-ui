@@ -1,0 +1,33 @@
+{
+  "name": "quill-table-ui",
+  "version": "1.0.0",
+  "description": "UI for Quill tables",
+  "main": "dist/lib/index.js",
+  "types": "dist/types/index.d.ts",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volser/quill-table-ui.git"
+  },
+  "keywords": [
+    "quill",
+    "table",
+    "ui"
+  ],
+  "author": "Sergiy VOloshyn <sergey.voloshyn@gmail.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/volser/quill-table-ui/issues"
+  },
+  "homepage": "https://github.com/volser/quill-table-ui#readme",
+  "devDependencies": {
+    "quill": "^2.0.0-dev.3",
+    "typescript": "^3.6.3"
+  }
+}
