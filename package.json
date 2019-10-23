@@ -2,13 +2,17 @@
   "name": "quill-table-ui",
   "version": "1.0.0",
   "description": "UI for Quill tables",
-  "main": "dist/lib/index.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">=6.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build:umd": "webpack --config webpack.config.ts --mode=production",
+    "build:esm": "tsc --module es2015",
+    "build:dist": "npm run build:esm && npm run build:umd",
+    "build:clean": "rm -rf dist",
+    "postversion": "npm run build:dist && git push && npm publish && npm run build:clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,7 +31,24 @@
   },
   "homepage": "https://github.com/volser/quill-table-ui#readme",
   "devDependencies": {
+    "@types/node": "^12.7.2",
+    "@types/webpack": "^4.32.2",
+    "css-loader": "^3.2.0",
+    "extract-loader": "^3.1.0",
+    "file-loader": "^4.2.0",
+    "node-sass": "^4.12.0",
     "quill": "^2.0.0-dev.3",
-    "typescript": "^3.6.3"
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "ts-loader": "^6.0.4",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "tslint-loader": "^3.5.4",
+    "typescript": "^3.6.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {
+    "positioning": "^2.0.0"
   }
 }
