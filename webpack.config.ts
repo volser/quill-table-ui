@@ -4,7 +4,7 @@ export default {
   entry: ['./src/index.ts', './src/index.scss'],
   output: {
     path: __dirname + '/dist/umd',
-    filename: '[name]',
+    filename: 'index.js',
     libraryTarget: 'umd',
     library: 'quillTableUI'
   },
