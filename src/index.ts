@@ -46,15 +46,21 @@ const iconRemoveRow =
 const iconRemoveTable =
   '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="icon" width="20px" height="20.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#595959" d="M764.42168889 830.5152c0 30.23530667-24.61013333 54.84430222-54.84316444 54.84430222H314.42147555c-30.23416889 0-54.84316445-24.61013333-54.84316444-54.84430222V248.32796445h504.84337778v582.18723555zM369.26577778 149.89084445c0-6.32832 4.92202667-11.25034667 11.25034667-11.25034667H644.18702222c6.32832 0 11.25034667 4.92202667 11.25034667 11.25034667v33.04675555H369.26577778V149.89084445z m559.68768 33.04675555H720.82773333V149.89084445c0-42.1888-34.45191111-76.64071111-76.64071111-76.64071112H380.51612445c-42.1888 0-76.64071111 34.45191111-76.64071112 76.64071112v33.04675555h-208.82773333c-18.28181333 0-33.04789333 14.76608-33.04789333 33.04675555s14.76608 33.04675555 33.04675555 33.04675556h98.43825778v581.48408889c0 66.79779555 54.14001778 120.93781333 120.93667555 120.93781333h395.1570489c66.79665778 0 120.93667555-54.14001778 120.93667555-120.93781333V248.32796445h98.43825778c18.28067555 0 33.04675555-14.76494222 33.04675555-33.04675556s-14.76608-32.34360889-33.04675555-32.34360889zM512 786.21923555c18.28181333 0 33.04675555-14.76608 33.04675555-33.04789333v-351.56195555c0-18.28181333-14.76494222-33.04675555-33.04675555-33.04675556s-33.04675555 14.76494222-33.04675555 33.04675556v351.56195555c0 18.28181333 14.76494222 33.04789333 33.04675555 33.04789333m-153.98456889 0c18.28181333 0 33.04675555-14.76608 33.04675556-33.04789333v-351.56195555c0-18.28181333-14.76494222-33.04675555-33.04675556-33.04675556s-33.04675555 14.76494222-33.04675556 33.04675556v351.56195555c0.70314667 18.28181333 15.46922667 33.04789333 33.04675556 33.04789333m307.96913778 0c18.28067555 0 33.04675555-14.76608 33.04675556-33.04789333v-351.56195555c0-18.28181333-14.76608-33.04675555-33.04675556-33.04675556s-33.04675555 14.76494222-33.04675556 33.04675556v351.56195555c0 18.28181333 14.76494222 33.04789333 33.04675556 33.04789333" /></svg>';
 
-interface MenuItem {
+export interface MenuItem {
   title: string;
   icon: string;
   handler: () => void;
 }
 
+export interface TableUIOptions {
+  maxRowCount?: number;
+}
+
 export default class TableUI {
   TOGGLE_TEMPLATE = `<svg width="9" height="9" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g><path d="M8,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S12.411,22,8,22z"/><path d="M52,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S56.411,22,52,22z"/><path d="M30,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,22,30,22z"/></g></svg>`;
-  DEFAULTS = {};
+  DEFAULTS: TableUIOptions = {
+    maxRowCount: -1
+  };
 
   quill: Quill;
   options: any;
@@ -69,14 +75,24 @@ export default class TableUI {
       title: 'Insert column right',
       icon: iconAddColRight,
       handler: () => {
-        this.table.insertColumnRight();
+        if (
+          !(this.options.maxRowCount > 0) ||
+          this.getColCount() < this.options.maxRowCount
+        ) {
+          this.table.insertColumnRight();
+        }
       }
     },
     {
       title: 'Insert column left',
       icon: iconAddColLeft,
       handler: () => {
-        this.table.insertColumnLeft();
+        if (
+          !(this.options.maxRowCount > 0) ||
+          this.getColCount() < this.options.maxRowCount
+        ) {
+          this.table.insertColumnLeft();
+        }
       }
     },
     {
@@ -169,6 +185,23 @@ export default class TableUI {
     const formats = this.quill.getFormat(range.index);
 
     return !!(formats['table'] && !range.length);
+  }
+
+  getColCount(range: Range = null) {
+    if (!range) {
+      range = this.quill.getSelection();
+    }
+    if (!range) {
+      return 0;
+    }
+    const [table] = this.table.getTable(range);
+    if (!table) {
+      return 0;
+    }
+    const maxColumns = table.rows().reduce((max, row) => {
+      return Math.max(row.children.length, max);
+    }, 0);
+    return maxColumns;
   }
 
   showMenu() {
