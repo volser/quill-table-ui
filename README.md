@@ -16,10 +16,11 @@ npm install quill-table-ui
 Load quill and style dependencies
 ```
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.0-dev.3/quill.min.js" type="text/javascript"></script>
+<script src="https://unpkg.com/quill-table-ui@1.0.5/dist/umd/index.js" type="text/javascript"></script>
 ```
 ```
 <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.0-dev.3/quill.snow.min.css" rel="stylesheet">
-<link href="unpkg.com/quill-table-ui@1.0.5/dist/index.css" rel="stylesheet">
+<link href="https://unpkg.com/quill-table-ui@1.0.5/dist/index.css" rel="stylesheet">
 ```
 
 ES6
