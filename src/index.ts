@@ -14,13 +14,13 @@ enum QuillEvents {
   SCROLL_OPTIMIZE = 'scroll-optimize',
   SCROLL_UPDATE = 'scroll-update',
   SELECTION_CHANGE = 'selection-change',
-  TEXT_CHANGE = 'text-change'
+  TEXT_CHANGE = 'text-change',
 }
 
 enum QuillSources {
   API = 'api',
   SILENT = 'silent',
-  USER = 'user'
+  USER = 'user',
 }
 
 const DEFAULT_PLACEMENT: Placement[] = [
@@ -28,7 +28,7 @@ const DEFAULT_PLACEMENT: Placement[] = [
   'bottom-right',
   'top-left',
   'top-right',
-  'auto'
+  'auto',
 ];
 
 const iconAddColRight =
@@ -59,7 +59,7 @@ export interface TableUIOptions {
 export default class TableUI {
   TOGGLE_TEMPLATE = `<svg width="9" height="9" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g><path d="M8,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S12.411,22,8,22z"/><path d="M52,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S56.411,22,52,22z"/><path d="M30,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,22,30,22z"/></g></svg>`;
   DEFAULTS: TableUIOptions = {
-    maxRowCount: -1
+    maxRowCount: -1,
   };
 
   quill: Quill;
@@ -68,7 +68,6 @@ export default class TableUI {
   menu: HTMLElement;
   position: any;
   table: any;
-  docClickBinded = this.hideMenu.bind(this);
 
   menuItems: MenuItem[] = [
     {
@@ -81,7 +80,7 @@ export default class TableUI {
         ) {
           this.table.insertColumnRight();
         }
-      }
+      },
     },
     {
       title: 'Insert column left',
@@ -93,43 +92,43 @@ export default class TableUI {
         ) {
           this.table.insertColumnLeft();
         }
-      }
+      },
     },
     {
       title: 'Insert row above',
       icon: iconAddRowAbove,
       handler: () => {
         this.table.insertRowAbove();
-      }
+      },
     },
     {
       title: 'Insert row below',
       icon: iconAddRowBelow,
       handler: () => {
         this.table.insertRowBelow();
-      }
+      },
     },
     {
       title: 'Delete column',
       icon: iconRemoveCol,
       handler: () => {
         this.table.deleteColumn();
-      }
+      },
     },
     {
       title: 'Delete row',
       icon: iconRemoveRow,
       handler: () => {
         this.table.deleteRow();
-      }
+      },
     },
     {
       title: 'Delete table',
       icon: iconRemoveTable,
       handler: () => {
         this.table.deleteTable();
-      }
-    }
+      },
+    },
   ];
 
   constructor(quill: Quill, options: any) {
@@ -144,36 +143,38 @@ export default class TableUI {
     this.toggle = quill.addContainer('ql-table-toggle');
     this.toggle.classList.add('ql-table-toggle_hidden');
     this.toggle.innerHTML = this.TOGGLE_TEMPLATE;
-
-    this.toggle.addEventListener('click', e => {
-      this.toggleMenu();
-
-      e.preventDefault();
-      e.stopPropagation();
-    });
-
-    this.quill.on(
-      QuillEvents.EDITOR_CHANGE,
-      (
-        type: QuillEvents,
-        range: Range,
-        oldRange: Range,
-        source: QuillSources
-      ) => {
-        if (type === QuillEvents.SELECTION_CHANGE) {
-          this.detectButton(range);
-        }
-      }
-    );
-
-    this.quill.root.addEventListener('contextmenu', (evt: MouseEvent) => {
-      if (!this.isTable()) {
-        return true;
-      }
-      evt.preventDefault();
-      this.showMenu();
-    });
+    this.toggle.addEventListener('click', this.toggleClickHandler);
+    this.quill.on(QuillEvents.EDITOR_CHANGE, this.editorChangeHandler);
+    this.quill.root.addEventListener('contextmenu', this.contextMenuHandler);
   }
+
+  editorChangeHandler = (
+    type: QuillEvents,
+    range: Range,
+    oldRange: Range,
+    source: QuillSources
+  ) => {
+    if (type === QuillEvents.SELECTION_CHANGE) {
+      this.detectButton(range);
+    }
+  };
+
+  contextMenuHandler = (evt: MouseEvent) => {
+    if (!this.isTable()) {
+      return true;
+    }
+    evt.preventDefault();
+    this.showMenu();
+  };
+
+  toggleClickHandler = (e) => {
+    this.toggleMenu();
+
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  docClickHandler = () => this.hideMenu;
 
   isTable(range?: Range) {
     if (!range) {
@@ -208,18 +209,18 @@ export default class TableUI {
     this.hideMenu();
     this.menu = this.quill.addContainer('ql-table-menu');
 
-    this.menuItems.forEach(it => {
+    this.menuItems.forEach((it) => {
       this.menu.appendChild(this.createMenuItem(it));
     });
     positionElements(this.toggle, this.menu, DEFAULT_PLACEMENT, false);
-    document.addEventListener('click', this.docClickBinded);
+    document.addEventListener('click', this.docClickHandler);
   }
 
   hideMenu() {
     if (this.menu) {
       this.menu.remove();
       this.menu = null;
-      document.removeEventListener('click', this.docClickBinded);
+      document.removeEventListener('click', this.docClickHandler);
     }
   }
 
@@ -239,7 +240,7 @@ export default class TableUI {
     node.appendChild(textSpan);
     node.addEventListener(
       'click',
-      e => {
+      (e) => {
         e.preventDefault();
         e.stopPropagation();
         this.quill.focus();
@@ -268,7 +269,7 @@ export default class TableUI {
         left: bounds.left - containerBounds.left,
         right: bounds.right - containerBounds.left,
         top: bounds.top - containerBounds.top,
-        width: bounds.width
+        width: bounds.width,
       };
 
       this.showToggle(bounds);
@@ -295,5 +296,18 @@ export default class TableUI {
     } else {
       this.showMenu();
     }
+  }
+
+  destroy() {
+    this.hideMenu();
+    this.quill.off(QuillEvents.EDITOR_CHANGE, this.editorChangeHandler);
+    this.quill.root.removeEventListener('contextmenu', this.contextMenuHandler);
+    this.toggle.removeEventListener('click', this.toggleClickHandler);
+    this.toggle.remove();
+    this.toggle = null;
+    this.options = this.DEFAULTS;
+    this.menu = null;
+    this.table = null;
+    this.quill = null;
   }
 }
