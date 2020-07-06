@@ -28,7 +28,7 @@ ES6
 import * as QuillTableUI from 'quill-table-ui'
 
 Quill.register({
-  'modules/tableUI': QuillTableUI
+  'modules/tableUI': QuillTableUI.default
 }, true)
 
 window.onload = () => {
