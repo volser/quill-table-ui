@@ -1,4 +1,4 @@
-import * as Quill from 'quill';
+import Quill from 'quill';
 import { positionElements, Placement } from 'positioning';
 
 interface Range {
